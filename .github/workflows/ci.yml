@@ -1,0 +1,29 @@
+name: .NET CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Stažení repozitáře (Checkout)
+        uses: actions/checkout@v4
+
+      - name: Nastavení .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Obnovení NuGet balíčků (Restore)
+        run: dotnet restore
+
+      - name: Sestavení projektu (Build)
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Spuštění testů (Test)
+        run: dotnet test --no-build --configuration Release --verbosity normal
